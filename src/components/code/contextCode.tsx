@@ -1,22 +1,31 @@
-import {
-  useState,
-  useMemo,
-  createContext,
-  useContext,
-  useReducer,
-} from "react";
+import { Prism } from "@mantine/prism";
+import { Code } from "./Code";
 
-const initialState = {
-  count: 0,
-};
+const componentCode = `
+const [countContext, dispatchContext] = useCounterContext();
 
-type Action =
-  | { type: "increment" }
-  | { type: "decrement" }
-  | { type: "incrementByAmount"; payload: number };
+return (
+    <div>
+      <div>
+        <Button onClick={() => dispatchContext({ type: "increment" })}>+</Button>
+        <span>{count}</span>
+        <Button onClick={() => dispatchContext({ type: "decrement"})>-</Button>
+      </div>
+      <Button
+      onClick={() =>
+        dispatchContext({
+          type: "incrementByAmount",
+          payload: countContext.count,
+        })
+      }
+      >
+        +{count}
+      </Button>
+    </div>
+  );
+  `;
 
-type State = typeof initialState;
-
+const storeCode = `
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case "increment":
@@ -46,9 +55,7 @@ export const CounterContext = createContext<[State, React.Dispatch<Action>]>([
 
 export const CounterProvider = ({
   children,
-}: {
-  children: React.ReactNode;
-}) => {
+}: {children: React.ReactNode;}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <CounterContext.Provider value={[state, dispatch]}>
@@ -58,3 +65,8 @@ export const CounterProvider = ({
 };
 
 export const useCounterContext = () => useContext(CounterContext);
+`;
+
+export const ContextCode = () => {
+  return <Code storeCode={storeCode} componentCode={componentCode} />;
+};

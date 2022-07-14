@@ -1,6 +1,27 @@
 import { Prism } from "@mantine/prism";
+import { Code } from "./Code";
 
-const Code = `
+const componentCode = `
+const count = useSelector((state: RootState) => state.counter.value);
+const dispatch = useDispatch();
+
+return (
+  <div>
+    <div>
+      <Button onClick={() => dispatch(increment())}>+</Button>
+      <span>{count}</span>
+      <Button onClick={() => dispatch(decrement())}>-</Button>
+    </div>
+    <Button
+      onClick={() => dispatch(incrementByAmount(count))}
+    >
+      +{count}
+    </Button>
+  </div>
+);
+`;
+
+const storeCode = `
 const initialState: CounterState = {
   value: 0,
 };
@@ -31,9 +52,5 @@ export const store = configureStore({
 `;
 
 export const RtkCode = () => {
-  return (
-    <Prism noCopy language="tsx">
-      {Code}
-    </Prism>
-  );
+  return <Code storeCode={storeCode} componentCode={componentCode} />;
 };

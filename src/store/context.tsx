@@ -1,6 +1,16 @@
-import { Prism } from "@mantine/prism";
+import { createContext, useContext, useReducer } from "react";
 
-const Code = `
+const initialState = {
+  count: 0,
+};
+
+type Action =
+  | { type: "increment" }
+  | { type: "decrement" }
+  | { type: "incrementByAmount"; payload: number };
+
+type State = typeof initialState;
+
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case "increment":
@@ -30,7 +40,9 @@ export const CounterContext = createContext<[State, React.Dispatch<Action>]>([
 
 export const CounterProvider = ({
   children,
-}: {children: React.ReactNode;}) => {
+}: {
+  children: React.ReactNode;
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <CounterContext.Provider value={[state, dispatch]}>
@@ -40,12 +52,3 @@ export const CounterProvider = ({
 };
 
 export const useCounterContext = () => useContext(CounterContext);
-`;
-
-export const ContextCode = () => {
-  return (
-    <Prism noCopy language="tsx">
-      {Code}
-    </Prism>
-  );
-};
